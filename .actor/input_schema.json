@@ -4,12 +4,52 @@
   "title": "Screener.in Stock Scraper Input",
   "type": "object",
   "properties": {
-    "screenUrl": {
-      "title": "Screen URL",
+    "sector": {
+      "title": "Sector",
       "type": "string",
-      "description": "Screener.in screen URL to scrape stocks from",
-      "editor": "textfield",
-      "prefill": "https://www.screener.in/screens/1/All-Stocks/"
+      "description": "Industry sector to filter stocks",
+      "editor": "select",
+      "enum": ["All", "IT", "Pharma", "Banking", "Auto", "FMCG", "Infrastructure", "Telecom", "Power", "Metals", "Oil & Gas"],
+      "default": "All",
+      "prefill": "All"
+    },
+    "minMarketCap": {
+      "title": "Minimum Market Cap (Cr)",
+      "type": "integer",
+      "description": "Minimum market capitalization in crores",
+      "editor": "number",
+      "minimum": 0,
+      "default": 0,
+      "prefill": 100
+    },
+    "maxPE": {
+      "title": "Maximum P/E Ratio",
+      "type": "number",
+      "description": "Maximum price-to-earnings ratio (filter out overvalued stocks)",
+      "editor": "number",
+      "minimum": 0,
+      "default": 50,
+      "prefill": 25
+    },
+    "minDividendYield": {
+      "title": "Minimum Dividend Yield (%)",
+      "type": "number",
+      "description": "Minimum dividend yield percentage",
+      "editor": "number",
+      "minimum": 0,
+      "maximum": 20,
+      "default": 0,
+      "prefill": 2
+    },
+    "minROE": {
+      "title": "Minimum ROE (%)",
+      "type": "number",
+      "description": "Minimum return on equity percentage",
+      "editor": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0,
+      "prefill": 15
     },
     "maxResults": {
       "title": "Max Results",
@@ -28,5 +68,5 @@
       "description": "Proxy settings"
     }
   },
-  "required": ["screenUrl", "maxResults"]
+  "required": ["sector", "maxResults"]
 }

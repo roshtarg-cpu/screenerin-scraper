@@ -11,7 +11,14 @@ async def main():
     async with Actor:
         actor_input = await Actor.get_input()
         max_results = actor_input.get('maxResults', 50)
-        screen_url = actor_input.get('screenUrl', 'https://www.screener.in/screens/1/All-Stocks/')
+        sector = actor_input.get('sector', 'All')
+        min_market_cap = actor_input.get('minMarketCap', 0)
+        max_pe = actor_input.get('maxPE', 50)
+        min_dividend_yield = actor_input.get('minDividendYield', 0)
+        min_roe = actor_input.get('minROE', 0)
+        
+        # Build screen URL based on filters (use All-Stocks as base, filter in-memory)
+        screen_url = 'https://www.screener.in/screens/1/All-Stocks/'
         
         # Setup proxy
         proxy_password = os.environ.get("APIFY_PROXY_PASSWORD")
@@ -45,7 +52,12 @@ async def main():
                         company_links.append(full_url)
             
             count = 0
-            for company_url in company_links[:max_results]:
+            scraped_companies = []
+            
+            for company_url in company_links:
+                if count >= max_results:
+                    break
+                
                 try:
                     # Fetch company detail page
                     detail_resp = await client.get(company_url)
@@ -79,6 +91,29 @@ async def main():
                                     if cells and len(cells) == len(headers):
                                         quarterly_results.append(dict(zip(headers, cells)))
                                 break
+                    
+                    # Parse numeric values for filtering
+                    market_cap_str = metrics.get('Market Cap', '0')
+                    market_cap_val = float(re.sub(r'[^\d.]', '', market_cap_str.split('Cr')[0]) if 'Cr' in market_cap_str else '0')
+                    
+                    pe_str = metrics.get('Stock P/E', '0')
+                    pe_val = float(re.sub(r'[^\d.]', '', pe_str)) if pe_str and pe_str != '-' else 999
+                    
+                    div_str = metrics.get('Dividend Yield', '0')
+                    div_val = float(re.sub(r'[^\d.]', '', div_str.replace('%', ''))) if div_str and div_str != '-' else 0
+                    
+                    roe_str = metrics.get('ROCE', '0')
+                    roe_val = float(re.sub(r'[^\d.]', '', roe_str.replace('%', ''))) if roe_str and roe_str != '-' else 0
+                    
+                    # Apply filters
+                    if market_cap_val < min_market_cap:
+                        continue
+                    if pe_val > max_pe:
+                        continue
+                    if div_val < min_dividend_yield:
+                        continue
+                    if roe_val < min_roe:
+                        continue
                     
                     # Push result
                     result = {
