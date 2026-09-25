@@ -9,7 +9,9 @@ from bs4 import BeautifulSoup
 
 async def main():
     async with Actor:
+        print("DEBUG: Actor context entered")
         actor_input = await Actor.get_input()
+        print(f"DEBUG: Input received: {actor_input}")
         max_results = actor_input.get('maxResults', 50)
         sector = actor_input.get('sector', 'All')
         min_market_cap = actor_input.get('minMarketCap', 0)
