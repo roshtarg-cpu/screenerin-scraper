@@ -1,0 +1,75 @@
+{
+  "$schema": "https://apify.com/schemas/v1/dataset.ide.json",
+  "actorSpecification": 1,
+  "fields": {
+    "url": {
+      "type": "string",
+      "title": "URL"
+    },
+    "companyName": {
+      "type": "string",
+      "title": "Company Name"
+    },
+    "marketCap": {
+      "type": "string",
+      "title": "Market Cap"
+    },
+    "currentPrice": {
+      "type": "string",
+      "title": "Current Price"
+    },
+    "stockPE": {
+      "type": "string",
+      "title": "Stock P/E"
+    },
+    "bookValue": {
+      "type": "string",
+      "title": "Book Value"
+    },
+    "dividendYield": {
+      "type": "string",
+      "title": "Dividend Yield"
+    },
+    "roe": {
+      "type": "string",
+      "title": "ROE"
+    },
+    "quarterlyResults": {
+      "type": "array",
+      "title": "Quarterly Results"
+    },
+    "scrapedAt": {
+      "type": "string",
+      "title": "Scraped At"
+    }
+  },
+  "views": {
+    "overview": {
+      "title": "Overview",
+      "transformation": {
+        "fields": ["companyName", "currentPrice", "marketCap", "stockPE"]
+      },
+      "display": {
+        "component": "table",
+        "properties": {
+          "companyName": {
+            "label": "Company",
+            "format": "text"
+          },
+          "currentPrice": {
+            "label": "Price",
+            "format": "text"
+          },
+          "marketCap": {
+            "label": "Market Cap",
+            "format": "text"
+          },
+          "stockPE": {
+            "label": "P/E",
+            "format": "text"
+          }
+        }
+      }
+    }
+  }
+}
