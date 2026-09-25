@@ -59,6 +59,9 @@ async def main():
                     break
                 
                 try:
+                    # Rate limiting - delay between requests
+                    await asyncio.sleep(2)
+                    
                     # Fetch company detail page
                     detail_resp = await client.get(company_url)
                     detail_resp.raise_for_status()
